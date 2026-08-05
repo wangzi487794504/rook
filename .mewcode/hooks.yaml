@@ -1,0 +1,19 @@
+hooks:
+  - name: block-rm
+    event: PRE_TOOL_USE
+    if:
+      all_of:
+        - field: tool
+          exact: exec_command
+        - field: command
+          regex: "rm -rf"
+    action:
+      type: command
+      command: "echo 'BLOCKED: dangerous rm command' >&2 && exit 2"
+    timeout: 1s
+
+  - name: notify-session
+    event: SESSION_START
+    action:
+      type: prompt
+      text: "注意：Hook 系统已激活，危险命令将被拦截"

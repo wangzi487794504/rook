@@ -1,0 +1,11 @@
+# MewCode LLM Provider 配置
+# 支持配置多个 Provider，通过 :switch 命令在运行时切换
+
+default_provider: deepseek
+
+providers:
+  - name: deepseek
+    protocol: anthropic
+    model: deepseek-v4-pro
+    base_url: https://api.deepseek.com/anthropic
+    api_key: sk-8baf4f69606e41b4a3762fd00fda0dd4
