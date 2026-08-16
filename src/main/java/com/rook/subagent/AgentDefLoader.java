@@ -1,5 +1,6 @@
 package com.rook.subagent;
 
+import com.rook.util.ClasspathScanner;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -7,21 +8,41 @@ import java.nio.file.*;
 import java.util.*;
 
 /**
- * 角色定义加载器 —— 四级来源(项目>用户>内置>插件)，同名覆盖。
- */
-/**
+ * 角色定义加载器 —— 内置从 classpath 加载，用户/项目从文件系统加载，同名覆盖。
+ *
  * @author wangzijie
  * @since 0.1.0
  */
 public class AgentDefLoader {
 
-    @SuppressWarnings("unchecked")
-    public static Map<String, AgentDef> loadAll(Path builtinDir, Path userDir, Path projectDir) {
+    /** 内置 SubAgent 在 classpath 中的根路径（打包后位于 fat jar 内） */
+    private static final String BUILTIN_RESOURCE = "com/rook/subagent/builtin";
+
+    /** 内置（classpath）+ 用户 + 项目 三级合并，同名按 项目 > 用户 > 内置 覆盖。 */
+    public static Map<String, AgentDef> loadAll(Path userDir, Path projectDir) {
         Map<String, AgentDef> result = new LinkedHashMap<>();
-        scan(builtinDir).forEach(d -> result.put(d.name(), d));
+        // 内置（最低优先，classpath）
+        loadBuiltin().forEach(d -> result.put(d.name(), d));
+        // 用户
         scan(userDir).forEach(d -> result.put(d.name(), d));
+        // 项目（最高优先）
         scan(projectDir).forEach(d -> result.put(d.name(), d));
-        // 插件级(恒为空，占位)
+        return result;
+    }
+
+    /** 从 classpath 枚举并加载内置 SubAgent。 */
+    public static List<AgentDef> loadBuiltin() {
+        List<AgentDef> result = new ArrayList<>();
+        for (String name : ClasspathScanner.listChildDirs(BUILTIN_RESOURCE)) {
+            try {
+                String content = ClasspathScanner.readTextOrNull(BUILTIN_RESOURCE + "/" + name + "/agent.md");
+                if (content == null) continue;
+                AgentDef def = parse(content, BUILTIN_RESOURCE + "/" + name);
+                if (def != null) result.add(def);
+            } catch (Exception e) {
+                System.err.println("[AgentDef] 内置加载失败: " + name + " - " + e.getMessage());
+            }
+        }
         return result;
     }
 

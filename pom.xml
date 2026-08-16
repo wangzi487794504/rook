@@ -67,6 +67,18 @@
     </dependencies>
 
     <build>
+        <!-- 资源打包：默认的 src/main/resources + src/main/java 下的内置资源（SKILL.md/agent.md） -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.md</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <!-- 编译插件 -->
             <plugin>

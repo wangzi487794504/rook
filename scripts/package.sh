@@ -41,6 +41,14 @@ jpackage --type app-image --name rook \
 # 6. Clean intermediate dirs (input + jre are embedded into the app-image)
 rm -rf dist/input dist/jre
 
+# 6a. Include config.yaml (API key uses env var placeholder) so the
+#     app can find it next to the rook launcher at launch.
+cp config.yaml dist/rook/
+
+# 6b. Include project config dir (.rook/) so MCP / hooks / rules resolve
+#     relative to the app working directory.
+if [ -d .rook ]; then cp -r .rook dist/rook/; fi
+
 # 7. Archive to tar.gz (detect platform: Darwin=mac, otherwise linux)
 OS="$(uname -s)"
 case "$OS" in

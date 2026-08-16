@@ -20,7 +20,6 @@ public class AgentTool implements Tool {
     private final List<String> globalDisallowed;
     private final List<ChatMessage> parentHistory;
     private final AgentDefLoader loader;
-    private final Path builtinDir;
     private final Path userDir;
     private final Path projectDir;
     private final Path repoRoot;
@@ -28,14 +27,13 @@ public class AgentTool implements Tool {
     /** @return 方法返回值 */
     public AgentTool(LlmProvider provider, ToolRegistry tools,
                      List<String> globalDisallowed, List<ChatMessage> parentHistory,
-                     AgentDefLoader loader, Path builtinDir, Path userDir, Path projectDir,
+                     AgentDefLoader loader, Path userDir, Path projectDir,
                      Path repoRoot) {
         this.provider = provider;
         this.tools = tools;
         this.globalDisallowed = globalDisallowed;
         this.parentHistory = new ArrayList<>(parentHistory);
         this.loader = loader;
-        this.builtinDir = builtinDir;
         this.userDir = userDir;
         this.projectDir = projectDir;
         this.repoRoot = repoRoot;
@@ -71,7 +69,7 @@ public class AgentTool implements Tool {
         try {
             var future = SubAgent.run(mode, agentType, task, parentHistory,
                     provider, tools, globalDisallowed,
-                    loader, builtinDir, userDir, projectDir, repoRoot);
+                    loader, userDir, projectDir, repoRoot);
             var result = future.get(); // 同步等待
 
             if (!result.success()) {

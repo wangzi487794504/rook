@@ -2,8 +2,9 @@ package com.rook.cli;
 
 import com.rook.core.App;
 
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -18,12 +19,19 @@ import java.nio.file.Paths;
 public class Main {
 
     public static void main(String[] args) {
-        // 统一 UTF-8 输出，避免 Windows 默认 GBK 导致中文乱码
+        // 创建 JLine 终端，并把标准输出/错误重定向到终端的输出通道。
+        // JLine 在 Windows 上直写控制台（Unicode），能绕开 GBK/UTF-8 字节编码
+        // 不一致导致的中文乱码；终端同时传给 App/Repl 复用，避免重复创建。
+        Terminal terminal = null;
         try {
-            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.UTF_8));
-            System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err), true, StandardCharsets.UTF_8));
+            terminal = TerminalBuilder.builder()
+                    .encoding(StandardCharsets.UTF_8)
+                    .build();
+            PrintStream out = new PrintStream(terminal.output(), true, terminal.encoding());
+            System.setOut(out);
+            System.setErr(out);
         } catch (Exception ignored) {
-            // 输出流重定向失败时保持默认，不阻塞启动
+            // 终端创建失败（如无控制台环境）时保持默认输出，不阻塞启动
         }
 
         String configPath = "./config.yaml";
@@ -36,7 +44,7 @@ public class Main {
         }
 
         try {
-            new App().run(Paths.get(configPath));
+            new App().run(Paths.get(configPath), terminal);
         } catch (Exception e) {
             System.err.println("启动失败: " + e.getMessage());
             System.exit(1);

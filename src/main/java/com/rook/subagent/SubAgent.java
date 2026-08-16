@@ -35,7 +35,7 @@ public class SubAgent {
             String mode, String agentType, String task,
             List<ChatMessage> parentHistory, LlmProvider provider,
             ToolRegistry tools, List<String> globalDisallowed,
-            AgentDefLoader loader, Path builtinDir, Path userDir, Path projectDir,
+            AgentDefLoader loader, Path userDir, Path projectDir,
             Path repoRoot) {
 
         return CompletableFuture.supplyAsync(() -> {
@@ -50,7 +50,7 @@ public class SubAgent {
                             "\n你在一个独立的子对话中运行。完成后给出最终回复。"));
                 } else {
                     Map<String, AgentDef> defs = loader != null
-                            ? loader.loadAll(builtinDir, userDir, projectDir)
+                            ? loader.loadAll(userDir, projectDir)
                             : Collections.emptyMap();
                     AgentDef def = defs.get(agentType);
                     if (def == null) {

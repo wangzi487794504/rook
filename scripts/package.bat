@@ -16,7 +16,10 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM 2. Clean old artifacts
+REM 2. Clean old artifacts.
+REM    Kill any running rook.exe first, otherwise it locks dist\rook\runtime
+REM    and breaks the delete + jpackage step.
+taskkill /F /IM rook.exe >nul 2>&1
 if exist dist rmdir /s /q dist
 mkdir dist
 
@@ -51,6 +54,24 @@ if errorlevel 1 (
 REM 6. Clean intermediate dirs (input + jre are embedded into the app-image)
 rmdir /s /q dist\input
 rmdir /s /q dist\jre
+
+REM 6a. Include config.yaml (API key uses env var placeholder) so the
+REM     app can find it next to rook.exe at launch.
+copy /y config.yaml dist\rook\
+if errorlevel 1 (
+    echo [ERROR] copy config.yaml failed
+    exit /b 1
+)
+
+REM 6b. Include project config dir (.rook/) so MCP / hooks / rules resolve
+REM     relative to the app working directory.
+if exist .rook (
+    xcopy /e /i /y .rook dist\rook\.rook
+    if errorlevel 1 (
+        echo [ERROR] copy .rook config failed
+        exit /b 1
+    )
+)
 
 REM 7. Archive to zip
 tar -a -c -f dist\rook-0.1.0-SNAPSHOT-win.zip -C dist rook

@@ -22,7 +22,6 @@ import org.jline.reader.*;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +50,7 @@ public class Repl implements Console {
     private final HookEngine hookEngine;
     private final WorktreeManager wtManager;
     private final TeamManager teamManager;
+    private final Terminal terminal;
     private LineReader lineReader;
     private boolean planMode;
 
@@ -63,7 +63,8 @@ public class Repl implements Console {
                 com.rook.context.ContextManager contextManager,
                 com.rook.memory.AutoMemory autoMemory,
                 CommandRegistry cmdRegistry, HookEngine hookEngine,
-                WorktreeManager wtManager, TeamManager teamManager) {
+                WorktreeManager wtManager, TeamManager teamManager,
+                Terminal terminal) {
         this.providers = providers;
         this.providerModels = providerModels;
         this.currentProvider = defaultProvider;
@@ -77,6 +78,7 @@ public class Repl implements Console {
         this.hookEngine = hookEngine;
         this.wtManager = wtManager;
         this.teamManager = teamManager;
+        this.terminal = terminal;
         this.agentLoop = new AgentLoop(loopConfig, promptBuilder, permissionEngine,
                 contextManager, autoMemory, hookEngine);
         this.cmdRegistry = cmdRegistry;
@@ -86,9 +88,7 @@ public class Repl implements Console {
 
     public void start() {
         try {
-            Terminal terminal = TerminalBuilder.builder()
-                    .encoding(StandardCharsets.UTF_8)
-                    .build();
+            Terminal terminal = this.terminal != null ? this.terminal : TerminalBuilder.builder().build();
             lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .completer(new CommandCompleter(dispatcher.getRegistry()))

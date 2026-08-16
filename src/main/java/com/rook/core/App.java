@@ -32,6 +32,8 @@ import com.rook.session.Session;
 import com.rook.tools.ToolRegistry;
 import com.rook.tools.impl.*;
 
+import org.jline.terminal.Terminal;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,8 +61,9 @@ public class App {
      * 启动 Rook。
      *
      * @param configPath 配置文件路径
+     * @param terminal   JLine 终端（可为 null，为 null 时由 Repl 自行创建）
      */
-    public void run(Path configPath) {
+    public void run(Path configPath, Terminal terminal) {
         System.out.println("正在加载配置...");
 
         // 1. 加载配置
@@ -102,12 +105,11 @@ public class App {
         toolRegistry.register(new GrepTool());
         toolRegistry.register(new WebSearchTool());
 
-        // 2c. 加载 Skill 系统
-        Path builtinSkills = Paths.get("src/main/java/com/rook/skills/builtin");
+        // 2c. 加载 Skill 系统（内置从 classpath 加载，用户/项目从文件系统）
         Path userSkills = userHome.resolve(".rook/skills");
         Path projectSkills = projectRoot.resolve(".rook/skills");
         SkillRegistry skillRegistry = new SkillRegistry();
-        SkillLoader.loadAll(builtinSkills, userSkills, projectSkills)
+        SkillLoader.loadAll(userSkills, projectSkills)
                 .forEach((name, def) -> skillRegistry.register(def));
         // 命令注册中心（提前创建，给 SkillTool 用）
         com.rook.cmd.CommandRegistry cmdRegistry = new com.rook.cmd.CommandRegistry();
@@ -117,13 +119,12 @@ public class App {
         System.out.println("[Skill] 已加载 " + skillRegistry.count() + " 个 Skill");
 
 
-        // 注册 Agent 工具（子Agent委派）
+        // 注册 Agent 工具（子Agent委派，内置角色从 classpath 加载）
         var agentLoader = new AgentDefLoader();
-        Path builtinAgents = Paths.get("src/main/java/com/rook/subagent/builtin");
         List<ChatMessage> emptyHistory = List.of();
         toolRegistry.register(new AgentTool(defaultProvider, toolRegistry,
                 List.of("agent"), emptyHistory,
-                agentLoader, builtinAgents, userSkills, projectSkills, projectRoot));
+                agentLoader, userSkills, projectSkills, projectRoot));
         // 2d. 发现并注册 MCP 外部工具
         McpManager mcpManager = new McpManager();
         mcpManager.discover(
@@ -208,7 +209,8 @@ public class App {
         LoopConfig loopConfig = new LoopConfig();
         Repl repl = new Repl(providers, providerModels, defaultProvider, defaultModel,
                 session, toolRegistry, loopConfig, promptBuilder, permissionEngine, mcpManager,
-                contextManager, autoMemory, cmdRegistry, hookEngine, wtManager, teamManager);
+                contextManager, autoMemory, cmdRegistry, hookEngine, wtManager, teamManager,
+                terminal);
 
         // ★ Skill 斜杠命令注册（放在 BuiltinCommands 之后，冲突静默跳过）
         for (SkillDef s : skillRegistry.all()) {
