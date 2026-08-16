@@ -1,3 +1,9 @@
+---
+title: "spec"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第8章 - 记忆与上下文持久化 Spec
 
 ## 背景

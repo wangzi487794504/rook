@@ -1,6 +1,6 @@
-# MewCode
+# Rook
 
-我正在构建一个终端 AI 编程助手（类似 Claude Code），项目名叫 MewCode，使用 Java 实现。
+我正在构建一个终端 AI 编程助手（类似 Claude Code），项目名叫 Rook，使用 Java 实现。
 
 ## 语言
 中文回答，中文注释。
@@ -19,7 +19,7 @@
 - 类名：大驼峰（PascalCase），如 `ToolExecutor`
 - 方法名/变量名：小驼峰（camelCase），如 `executeCommand`
 - 常量：全大写下划线分隔（UPPER_SNAKE_CASE），如 `MAX_RETRY_COUNT`
-- 包名：全小写，如 `com.mewcode.core`
+- 包名：全小写，如 `com.rook.core`
 
 ### 注释规范
 - 所有公共类和方法必须有 Javadoc 注释，使用中文
@@ -43,7 +43,7 @@
 ## 项目结构
 
 ```
-mewcode/
+rook/
 ├── pom.xml                    — Maven 配置
 ├── CLAUDE.md                  — 项目指令
 ├── .claude/
@@ -56,13 +56,13 @@ mewcode/
 │       ├── task.md
 │       └── checklist.md
 └── src/
-    ├── main/java/com/mewcode/
+    ├── main/java/com/rook/
     │   ├── core/              — 核心引擎
     │   ├── llm/               — LLM API 调用层
     │   ├── tools/             — 工具执行
     │   ├── prompt/            — Prompt 构建
     │   └── cli/               — CLI 入口
-    └── test/java/com/mewcode/ — 测试代码
+    └── test/java/com/rook/ — 测试代码
 ```
 
 ## 开发工作流
@@ -79,7 +79,7 @@ mewcode/
 
 开发完功能后，用 tmux 做端到端测试：
 
-1. 在 tmux 中启动 MewCode
+1. 在 tmux 中启动 Rook
 2. 输入一段真实的对话请求
-3. 观察 MewCode 是否正确调用工具、生成回复
+3. 观察 Rook 是否正确调用工具、生成回复
 4. 对照 checklist.md 逐项验收

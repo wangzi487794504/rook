@@ -1,3 +1,9 @@
+---
+title: "checklist"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第6章 - MCP 客户端 Checklist
 - [ ] JSON-RPC 请求/响应按 id 配对
 - [ ] stdio 传输握手+列工具+调用

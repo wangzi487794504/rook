@@ -1,3 +1,9 @@
+---
+title: "spec"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第7章 - 上下文管理 Spec
 
 ## 背景

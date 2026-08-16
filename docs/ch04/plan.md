@@ -1,3 +1,9 @@
+---
+title: "plan"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第4章 - 结构化 System Prompt Plan
 
 ## 架构概览

@@ -1,3 +1,9 @@
+---
+title: "checklist"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第7章 Checklist
 - [ ] 工具结果 > 8KB → 存盘+预览
 - [ ] 预览逐字节稳定

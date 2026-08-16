@@ -1,3 +1,9 @@
+---
+title: "spec"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第6章 - MCP 客户端 Spec
 
 ## 背景

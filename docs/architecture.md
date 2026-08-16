@@ -1,8 +1,8 @@
-# MewCode 架构文档
+# Rook 架构文档
 
 ## 一、项目概览
 
-MewCode 是一个终端 AI 编程助手（类似 Claude Code），用 Java 17 实现。用户通过命令行 REPL 与之交互，它可以调用 LLM 生成回复、执行文件操作、运行 shell 命令、搜索代码，还能接入外部 MCP Server 扩展工具。
+Rook 是一个终端 AI 编程助手（类似 Claude Code），用 Java 17 实现。用户通过命令行 REPL 与之交互，它可以调用 LLM 生成回复、执行文件操作、运行 shell 命令、搜索代码，还能接入外部 MCP Server 扩展工具。
 
 ```
 用户输入 → REPL 界面 → AgentLoop 引擎 → LLM Provider → AI 回复
@@ -30,7 +30,7 @@ MewCode 是一个终端 AI 编程助手（类似 Claude Code），用 Java 17 �
 ## 二、包结构
 
 ```
-com.mewcode/
+com.rook/
 ├── cli/              ← 命令行入口和 REPL 交互
 ├── core/             ← 核心引擎
 │   └── agent/        ←   Agent Loop 子系统
@@ -253,7 +253,7 @@ Session.java       消息历史: List<ChatMessage>
                    ─ addMessage() / getMessages() / clear()
                    ─ save(Path) → Jackson JSON 序列化
                    ─ load(Path) → 反序列化 / 文件不存在返回空 Session
-                   持久化位置: ~/.mewcode/sessions/default.json
+                   持久化位置: ~/.rook/sessions/default.json
 ```
 
 ---
@@ -270,7 +270,7 @@ SupplementMessage.java 补充消息: [Supplement] 标签 user 消息
 
 modules/
   固定模块 (priority 1-7):
-    IdentityModule(1)            身份: "你是 MewCode 终端 AI 编程助手..."
+    IdentityModule(1)            身份: "你是 Rook 终端 AI 编程助手..."
     SystemConstraintsModule(2)   系统约束: 不编造/不跳过/错误处理
     TaskModeModule(3)            任务模式: planMode? "计划模式" : "正常模式"
     ActionExecutionModule(4)     动作执行: 工具调用流程说明
@@ -333,8 +333,8 @@ JsonRpc.java       JSON-RPC 2.0 消息构造/解析
                    ─ AtomicInteger ID 生成
 
 McpConfig.java     配置加载 + ${VAR} 展开 + 两层合并
-                   ─ 用户级: ~/.mewcode/mcp.yaml
-                   ─ 项目级: .mewcode/mcp.yaml
+                   ─ 用户级: ~/.rook/mcp.yaml
+                   ─ 项目级: .rook/mcp.yaml
 
 McpTransport.java  传输接口: send(jsonRpc) → response, close()
 StdioTransport     子进程管道: ProcessBuilder → stdin/stdout 行协议
@@ -389,7 +389,7 @@ Repl.processMessage()
   │ AgentLoop (Round 1)                                │
   │                                                     │
   │ PromptBuilder.build(ctx)                            │
-  │   → "## 身份\n你是 MewCode...\n\n## 工具使用\n..." │
+  │   → "## 身份\n你是 Rook...\n\n## 工具使用\n..." │
   │ history.add(0, system消息)                          │
   │                                                     │
   │ StreamCollector collector(token → eventQueue)       │

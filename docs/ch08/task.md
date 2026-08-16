@@ -1,3 +1,9 @@
+---
+title: "task"
+author: wangzijie
+date: 2026-08-05
+---
+
 ## T1: ProjectInstructions
 **文件:** `memory/ProjectInstructions.java`
 三层CLAUDE.md + @include(visited防环/3层/项目内限制)

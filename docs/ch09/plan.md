@@ -1,3 +1,9 @@
+---
+title: "plan"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第9章 Plan — 斜杠命令系统
 
 ## 架构

@@ -1,3 +1,9 @@
+---
+title: "spec"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第2章 - 工具系统 Spec
 
 ## 背景

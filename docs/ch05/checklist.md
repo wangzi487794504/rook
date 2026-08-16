@@ -1,3 +1,9 @@
+---
+title: "checklist"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第5章 - 权限系统 Checklist
 
 - [ ] AC1: rm -rf / → 黑名单拦截

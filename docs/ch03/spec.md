@@ -1,3 +1,9 @@
+---
+title: "spec"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第3章 - Agent Loop Spec
 
 ## 背景

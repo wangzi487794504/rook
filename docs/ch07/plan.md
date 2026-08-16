@@ -1,3 +1,9 @@
+---
+title: "plan"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第7章 - 上下文管理 Plan
 
 ## 架构概览

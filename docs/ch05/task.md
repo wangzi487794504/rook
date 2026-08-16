@@ -1,3 +1,9 @@
+---
+title: "task"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第5章 - 权限系统 Tasks
 
 ## T1: 创建 PermissionResult + PermissionMode + ToolCategory

@@ -1,3 +1,9 @@
+---
+title: "plan"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第6章 - MCP 客户端 Plan
 
 ## 架构概览

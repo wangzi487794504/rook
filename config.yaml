@@ -8,4 +8,4 @@ providers:
     protocol: anthropic
     model: deepseek-v4-pro
     base_url: https://api.deepseek.com/anthropic
-    api_key: sk-8baf4f69606e41b4a3762fd00fda0dd4
+    api_key: ${DEEPSEEK_API_KEY}

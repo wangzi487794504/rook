@@ -1,0 +1,16 @@
+package com.rook.config;
+
+import java.util.List;
+
+/**
+ * 全局应用配置，对应 config.yaml 的完整解析结果。
+ *
+ * @param providers       所有 Provider 配置列表
+ * @param defaultProvider 默认使用的 Provider 名称，必须在 providers 中存在
+ * @author wangzijie
+ * @since 0.1.0
+ */
+public record AppConfig(
+        List<ProviderConfig> providers,
+        String defaultProvider) {
+}

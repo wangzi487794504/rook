@@ -1,3 +1,9 @@
+---
+title: "checklist"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第1章 - 对话交互 Checklist
 
 > 每一项通过运行代码或观察行为来验证，聚焦系统行为。

@@ -1,3 +1,9 @@
+---
+title: "checklist"
+author: wangzijie
+date: 2026-08-05
+---
+
 - [ ] 别名冲突启动时panic
 - [ ] /前缀走分发, 非/前缀走AI
 - [ ] Tab补全菜单

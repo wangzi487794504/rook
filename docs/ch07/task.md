@@ -1,3 +1,9 @@
+---
+title: "task"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第7章 Tasks
 
 ## T1: ContextConfig

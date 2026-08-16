@@ -16,3 +16,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# 分发产物
+dist/

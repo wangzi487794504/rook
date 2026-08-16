@@ -1,3 +1,9 @@
+---
+title: "task"
+author: wangzijie
+date: 2026-08-05
+---
+
 ## T1: CommandType + Command record
 ## T2: Console 接口
 ## T3: CommandRegistry (冲突检测+注册)

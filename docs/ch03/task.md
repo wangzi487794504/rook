@@ -1,3 +1,9 @@
+---
+title: "task"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第3章 - Agent Loop Tasks
 
 ## 文件清单

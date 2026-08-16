@@ -1,3 +1,9 @@
+---
+title: "task"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第6章 - MCP 客户端 Tasks
 
 ## T1: JsonRpc 消息工具

@@ -1,3 +1,9 @@
+---
+title: "plan"
+author: wangzijie
+date: 2026-08-05
+---
+
 # MewCode 第3章 - Agent Loop Plan
 
 ## 架构概览
