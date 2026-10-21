@@ -31,3 +31,6 @@ docs/测试/
 
 # Claude 本地配置（含权限历史与明文密钥，不入库）
 .claude/
+
+# Rook 本地规则/MCP/Hooks（个人痕迹，不入库）
+.rook/

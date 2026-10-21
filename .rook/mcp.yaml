@@ -1,5 +1,0 @@
-servers:
-  everything:
-    type: stdio
-    command: cmd
-    args: ["/c", "npx", "-y", "@modelcontextprotocol/server-everything"]
