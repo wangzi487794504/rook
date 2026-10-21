@@ -9,3 +9,10 @@ providers:
     model: deepseek-v4-pro
     base_url: https://api.deepseek.com/anthropic
     api_key: ${DEEPSEEK_API_KEY}
+
+# 联网搜索 API key（可选，二选一；不配则回退到 Bing HTML 抓取）
+# GLM 智谱：https://open.bigmodel.cn     → 设 GLM_SEARCH_API_KEY
+# Brave   ：https://brave.com/search/api → 设 BRAVE_SEARCH_API_KEY
+search:
+  glm_api_key: ${GLM_SEARCH_API_KEY:-}
+  brave_api_key: ${BRAVE_SEARCH_API_KEY:-}

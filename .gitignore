@@ -19,3 +19,12 @@ Thumbs.db
 
 # 分发产物
 dist/
+
+# 求职简历（个人隐私，不入库）
+docs/简历-项目经历.md
+docs/简历修改清单.md
+
+# 压缩包 / 原始抓取 / 测试散件
+docs/笔记.zip
+docs/笔记/_ai-agents-fitz.txt
+docs/测试/

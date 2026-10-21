@@ -3,6 +3,7 @@ package com.rook.core;
 import com.rook.cli.Repl;
 import com.rook.config.AppConfig;
 import com.rook.config.ConfigLoader;
+import com.rook.config.SearchConfig;
 import com.rook.context.ContextConfig;
 import com.rook.context.ContextManager;
 import com.rook.core.agent.LoopConfig;
@@ -103,7 +104,10 @@ public class App {
         toolRegistry.register(new ExecCommandTool());
         toolRegistry.register(new GlobTool());
         toolRegistry.register(new GrepTool());
-        toolRegistry.register(new WebSearchTool());
+        SearchConfig searchCfg = appConfig.search();
+        toolRegistry.register(new WebSearchTool(
+                searchCfg != null ? searchCfg.glmApiKey() : null,
+                searchCfg != null ? searchCfg.braveApiKey() : null));
 
         // 2c. 加载 Skill 系统（内置从 classpath 加载，用户/项目从文件系统）
         Path userSkills = userHome.resolve(".rook/skills");

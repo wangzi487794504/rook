@@ -109,7 +109,7 @@ Rook (MCP 客户端)  ←──JSON-RPC──→  MCP Server (工具提供方)
 
 抽象传输层，支持多种传输方式。
 
-```
+```java
 // mcp/McpTransport.java
 package com.rook.mcp;
 
@@ -270,7 +270,7 @@ this.reader = new BufferedReader(
 
 #### 3. send 方法
 
-```
+```java
 public synchronized String send(String jsonRpcRequest) throws IOException {
     writer.write(jsonRpcRequest);
     writer.newLine();
@@ -495,7 +495,7 @@ Map<String, Object> initParams = Map.of(
 
 ##### 阶段 2：notifications/initialized
 
-```
+```java
 Map<String, Object> notify = Map.of(
     "jsonrpc", "2.0",
     "method", "notifications/initialized",
@@ -525,7 +525,7 @@ return parseTools(toolsResp.result());
 
 **返回的工具列表长这样：**
 
-```
+```json
 {
   "tools": [
     {
@@ -547,7 +547,7 @@ return parseTools(toolsResp.result());
 
 #### 2. callTool — 调用工具
 
-```
+```java
 public ToolResult callTool(String toolName, Map<String, Object> params) throws IOException {
     Map<String, Object> callParams = Map.of(
         "name", toolName,
@@ -576,7 +576,7 @@ public ToolResult callTool(String toolName, Map<String, Object> params) throws I
 
 #### 3. blockingSend — 发送请求
 
-```
+```java
 private JsonRpcResponse blockingSend(String method, Map<String, Object> params) {
     int id = ...; // 生成唯一 id
     
@@ -607,7 +607,7 @@ private JsonRpcResponse blockingSend(String method, Map<String, Object> params) 
 
 把 MCP 工具包装成我们的 Tool 接口，这样可以注册到 ToolRegistry 里，和内置工具一样用。
 
-```
+```java
 // mcp/McpToolAdapter.java
 package com.rook.mcp;
 

@@ -85,7 +85,23 @@ public class ConfigLoader {
                     + "可用: " + providers.stream().map(ProviderConfig::name).toList());
         }
 
-        return new AppConfig(providers, defaultProvider);
+        return new AppConfig(providers, defaultProvider, parseSearch(root.get("search")));
+    }
+
+    /** 解析可选 search 节；未配置或 key 全空返回 null。 */
+    private static SearchConfig parseSearch(Object obj) {
+        if (!(obj instanceof Map<?, ?> map)) return null;
+        String glm = optional(map, "glm_api_key");
+        String brave = optional(map, "brave_api_key");
+        return (glm == null && brave == null) ? null : new SearchConfig(glm, brave);
+    }
+
+    /** 取可选字段；缺失/展开后为空返回 null，值自动展开 ${VAR}。 */
+    private static String optional(Map<?, ?> map, String key) {
+        Object value = map.get(key);
+        if (value == null) return null;
+        String expanded = expand(value.toString().trim());
+        return expanded.isBlank() ? null : expanded;
     }
 
     /** 解析单个 Provider，提取并校验五个字段 */

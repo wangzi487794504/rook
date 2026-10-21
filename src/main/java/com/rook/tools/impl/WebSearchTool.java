@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 联网搜索工具 —— Bing Web Search API（主） + HTML 抓取（备）。
@@ -28,6 +30,21 @@ public class WebSearchTool implements Tool {
     private static final String BRAVE_API = "https://api.search.brave.com/res/v1/web/search";
     private static final String BING_HTML = "https://cn.bing.com/search";
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    /** 配置注入的 key（优先于环境变量，可空） */
+    private final String glmKey;
+    private final String braveKey;
+
+    /** 无参构造：仅从环境变量读取 key（兼容旧用法与测试）。 */
+    public WebSearchTool() {
+        this(null, null);
+    }
+
+    /** 注入配置中的 key（可空），执行时优先于环境变量。 */
+    public WebSearchTool(String glmKey, String braveKey) {
+        this.glmKey = glmKey;
+        this.braveKey = braveKey;
+    }
 
     @Override public String name() { return "web_search"; }
 
@@ -55,12 +72,12 @@ public class WebSearchTool implements Tool {
         int count = Math.min(params.containsKey("count")
                 ? ((Number) params.get("count")).intValue() : 5, 10);
 
-        String apiKey = System.getenv("GLM_SEARCH_API_KEY");
-        if (apiKey != null && !apiKey.isBlank()) {
+        String apiKey = firstNonBlank(glmKey, System.getenv("GLM_SEARCH_API_KEY"));
+        if (apiKey != null) {
             return searchGlm(query, count, apiKey);
         }
-        apiKey = System.getenv("BRAVE_SEARCH_API_KEY");
-        if (apiKey != null && !apiKey.isBlank()) {
+        apiKey = firstNonBlank(braveKey, System.getenv("BRAVE_SEARCH_API_KEY"));
+        if (apiKey != null) {
             return searchApi(query, count, apiKey);
         }
         return searchHtml(query, count);
@@ -165,12 +182,15 @@ public class WebSearchTool implements Tool {
             int found = 0;
             for (String block : html.split("<li class=\"b_algo\"")) {
                 if (found >= count) break;
-                String title = extract(block, "<h2>", "</h2>");
-                String cite = extract(block, "<cite>", "</cite>");
+                String title = extractTag(block, "h2");
+                String cite = extractTag(block, "cite");
                 if (title == null) continue;
                 title = title.replaceAll("<[^>]+>", "").trim();
                 if (title.isEmpty()) continue;
-                String url = cite != null ? "https://" + cite.replaceAll("<[^>]+>", "").trim() : "";
+                String url = cite != null ? cite.replaceAll("<[^>]+>", "").trim() : "";
+                if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
+                    url = "https://" + url;
+                }
                 sb.append(++found).append(". **").append(title).append("**\n   ").append(url).append("\n\n");
             }
             return found > 0 ? ToolResult.ok(sb.toString())
@@ -183,10 +203,17 @@ public class WebSearchTool implements Tool {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static List<Map<String, Object>> uncheckedCast(List l) { return l; }
 
-    private static String extract(String s, String open, String close) {
-        int i = s.indexOf(open);
-        if (i < 0) return null;
-        int j = s.indexOf(close, i + open.length());
-        return j < 0 ? null : s.substring(i + open.length(), j);
+    /** 取第一个非空白值（配置注入优先，其次环境变量），都空返回 null。 */
+    private static String firstNonBlank(String a, String b) {
+        if (a != null && !a.isBlank()) return a.trim();
+        if (b != null && !b.isBlank()) return b.trim();
+        return null;
+    }
+
+    /** 提取指定标签内容，兼容带属性的标签（如 {@code <h2 class="">}）。 */
+    private static String extractTag(String s, String tag) {
+        Matcher m = Pattern.compile("<" + tag + "[^>]*>(.*?)</" + tag + ">",
+                Pattern.DOTALL | Pattern.CASE_INSENSITIVE).matcher(s);
+        return m.find() ? m.group(1) : null;
     }
 }
